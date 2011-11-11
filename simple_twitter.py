@@ -28,9 +28,16 @@ class simple_twitter:
         self.client = oauth.Client(self.consumer,self.token)
 
     def make_request(self, url,method,params=None):
+        if not params:
+            params = ''
+        print params
         resp, content = self.client.request(url, method, params)
-        self.rate_limit = resp['x-ratelimit-limit']
-        self.ratelimit_reset = resp['x-ratelimit-reset']
+        try:
+            self.rate_limit = resp['x-ratelimit-limit']
+            self.ratelimit_reset = resp['x-ratelimit-reset']
+        except:
+            return content
+
         content = simplejson.loads(content)
         return content
 
